@@ -30,7 +30,7 @@ class Question extends CI_Controller
             "data" => array(),
             "msg" => "this is question index!"
         );
-        echo json_encode($data);
+        $this->echoJsonAndExit($data);
     }
 
 
@@ -46,8 +46,6 @@ class Question extends CI_Controller
             'data' => ''
         );
 
-        echo $subjectId = $this->params['subjectId'];
-
         //1 获取参数
         $token = $this->params['token'];//token
         $roundId = $this->params['roundId']; //本局的id
@@ -62,8 +60,7 @@ class Question extends CI_Controller
 
         //3 组织返回数据
         $result['data'] = $arrQuestion;
-        echo json_encode($result);
-        exit();
+        $this->echoJsonAndExit($result);
     }
 
     /**
@@ -82,18 +79,30 @@ class Question extends CI_Controller
         $token = $this->params['token'];//token
         $roundId = $this->params['roundId']; //本局的id
         $subjectId = $this->params['subjectId']; //获取科目id
-        $useId = $this->params['userId']; //获取当前用户id
-
+        $userId = $this->params['userId']; //获取当前用户id
         //2 业务逻辑处理
         //2.1汇总该局的相关信息
-        //TODO
+        $model = $this->load->model('UserQuestion_model', '', true);
+        $roundRecord = $this->UserQuestion_model->getRoundScore($roundId);
+        $roundScore =  $roundRecord['roundScore'];
+        //2.2若该局打破单局记录，则更新最新的单局最高分
+        $model = $this->load->model('User_model', '', true);
+        $userInfo = $this->User_model->getBasicUserInfo($userId);
+
+        if (empty($userInfo)){
+            $this->User_model->addUserScore($userId, $roundScore, $allScore = 0);
+        }elseif($roundScore > $userInfo['round_score']){
+            $this->User_model->updateUserRoundScore($userId, $roundScore, $allScore = 0);
+        }
 
 
         //3 组织返回数据
-        $result['data'] = array();
+        $result['data'] = array(
+            'roundId' => $roundId,
+            'score' => $roundScore
+        );
         $result['msg'] = '本局结束';
-        echo json_encode($result);
-        exit();
+        $this->echoJsonAndExit($result);
     }
 
     /**
@@ -139,8 +148,7 @@ class Question extends CI_Controller
                 'msg' => '保存答题结果失败！',
                 'data' => ''
             );
-            echo json_encode($result);
-            exit();
+            $this->echoJsonAndExit($result);
         }
 
         //2.3 获取新的题目
@@ -154,8 +162,7 @@ class Question extends CI_Controller
         $result['data']['score'] = $score;
         //3.3 奖励
         $result['data']['reward'] = $reward;
-        echo json_encode($result);
-        exit();
+        $this->echoJsonAndExit($result);
     }
 
     /**

@@ -58,9 +58,18 @@ class UserQuestion_model extends CI_Model
     public function getRoundRecord($roundId)
     {
         $sql = "SELECT * FROM user_question_record WHERE round_id = {$roundId} ORDER BY record_id DESC ";
-        echo $sql;
         $query = $this->db->query($sql);
         $result = $query->result_array();
+        return $result;
+    }
+    /**
+     * 根据round_id获取本局得分
+     */
+    public function getRoundScore($roundId)
+    {
+        $sql = "SELECT SUM(score) as roundScore FROM user_question_record WHERE round_id = {$roundId} AND is_right = 1";
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
         return $result;
     }
 

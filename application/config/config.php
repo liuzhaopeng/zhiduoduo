@@ -521,3 +521,11 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+/*****项目相关配置*******/
+//微信相关
+//$config['wx_appid'] = 'wx3456fb6df3921261';
+//$config['wx_secret'] = '337b44a57e6f47c52c57ee1767415497';
+
+$config['wx_appid'] = 'wx58aa51d8927e9dce';
+$config['wx_secret'] = 'ac19f73d3b0c4df1ec17f22fe72376e9';

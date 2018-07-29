@@ -87,7 +87,12 @@ class CI_Controller {
 		$this->load =& load_class('Loader', 'core');
 		$this->load->initialize();
 		//获取post过来的json格式参数
-        $this->params = json_decode($this->input->raw_input_stream, true);
+        //方式一：
+        $input = file_get_contents('php://input', 'r');
+        $this->params = json_decode($input, true);
+        //方式二：
+        //$this->params = json_decode($this->input->raw_input_stream, true);
+
 		log_message('info', 'Controller Class Initialized');
 	}
 
@@ -103,5 +108,14 @@ class CI_Controller {
 	{
 		return self::$instance;
 	}
+
+    /**
+     * 把数组转成json，输出并退出
+     */
+	public function echoJsonAndExit($arrData)
+    {
+        echo json_encode($arrData);
+        exit();
+    }
 
 }

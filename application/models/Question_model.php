@@ -44,10 +44,10 @@ class Question_model extends CI_Model
         foreach ($arrQues as $row){
             $answer = $row['answer'];
             $selection = array(
-                array('selection_1'=>$row['selection_1'], 'answer' => ($answer == 1) ? true : false),
-                array('selection_2'=>$row['selection_2'], 'answer' => ($answer == 2) ? true : false),
-                array('selection_3'=>$row['selection_3'], 'answer' => ($answer == 3) ? true : false),
-                array('selection_4'=>$row['selection_4'], 'answer' => ($answer == 4) ? true : false),
+                array('selection'=>$row['selection_1'], 'answer' => ($answer == 1) ? true : false),
+                array('selection'=>$row['selection_2'], 'answer' => ($answer == 2) ? true : false),
+                array('selection'=>$row['selection_3'], 'answer' => ($answer == 3) ? true : false),
+                array('selection'=>$row['selection_4'], 'answer' => ($answer == 4) ? true : false),
             );
             //新增组织好的
             $row['selection'] = $selection;
@@ -101,5 +101,32 @@ class Question_model extends CI_Model
         $result = $this->structSelection($arrQues);
         return $result;
     }
+
+    /**
+     * 添加问题
+     * @param $arrQuesData
+     * @return mixed
+     */
+    public function addQuestion($arrQuesData)
+    {
+        $data = array(
+            'subject_id' => $arrQuesData['subject_id'],
+            'subject_name' => $arrQuesData['subject_name'],
+            'subject_level_id' => $arrQuesData['subject_level_id'],
+            'subject_level_name' => $arrQuesData['subject_level_name'],
+            'ques_type' => $arrQuesData['ques_type'],
+            'ques_title' => $arrQuesData['ques_title'],
+            'selection_1' => $arrQuesData['selection_1'],
+            'selection_2' => $arrQuesData['selection_2'],
+            'selection_3' => $arrQuesData['selection_3'],
+            'selection_4' => $arrQuesData['selection_4'],
+            'answer' => $arrQuesData['answer'],
+            'score' => $arrQuesData['score'],
+        );
+        $this->db->insert('question', $data);
+        $affectedRows = $this->db->affected_rows();
+        return $affectedRows;
+    }
+
 
 }
